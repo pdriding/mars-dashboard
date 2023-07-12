@@ -1,8 +1,9 @@
-let store = {
-  user: { name: "Peter" },
-  apod: "",
-  rovers: ["Curiosity", "Opportunity", "Spirit"],
-};
+// let store = {
+//   user: { name: "Peter" },
+//   apod: "",
+//   rover: "",
+//   rovers: ["Curiosity", "Opportunity", "Spirit"],
+// };
 
 // let spirit = {
 //   recentImages: [],
@@ -12,15 +13,30 @@ let store = {
 //   status
 // };
 
+let store = {};
+
 // The launch date, landing date, name and status
 
 // add our markup to the page
 const root = document.getElementById("root");
 
-const updateStore = (store, newState) => {
-  store = Object.assign(store, newState);
+const updateStore = (oldState, updatedState) => {
+  const newState = Object.values(updatedState)
+    .flat()
+    .reduce((acc, cur, i, arr) => {
+      console.log(cur.img_src);
+      if (i === 0) {
+        acc.name = cur.rover.name;
+        acc.landingDate = cur.rover.landing_date;
+        acc.launchDate = cur.rover.launch_date;
+        acc.image = [];
+      }
+      acc.image.push(cur.img_src);
+      return acc;
+    }, {});
+
+  Object.assign(oldState, newState);
   render(root, store);
-  console.log(store);
 };
 
 const render = async (root, state) => {
@@ -29,15 +45,18 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-  let { rovers, apod } = state;
-  let { name } = state.user;
+  // let { rovers, apod, rover } = state;
+  // let { name } = state.user;
+  // console.log(apod);
+  console.log(state);
 
   return `
         <header></header>
         <main>
-            ${Greeting(name)}
+            ${Greeting(state.name)}
             <section>
-                <h1>${rovers}</h1>
+                <h3>This NASA rover left earth on ${state.launchDate}</h3>
+                <h3>And landed on mars on ${state.landingDate}</h3>
                 <h3>Put things on the page!</h3>
                 <p>Here is an example section.</p>
                 <p>
@@ -48,7 +67,12 @@ const App = (state) => {
                     explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
                     but generally help with discoverability of relevant imagery.
                 </p>
-                ${ImageOfTheDay(apod)}
+                ${ImageOfTheDay(state.image[0])}
+                ${ImageOfTheDay(state.image[1])}
+                ${ImageOfTheDay(state.image[2])}
+                ${ImageOfTheDay(state.image[3])}
+                ${ImageOfTheDay(state.image[4])}
+                ${ImageOfTheDay(state.image[5])}
             </section>
         </main>
         <footer></footer>
@@ -57,7 +81,8 @@ const App = (state) => {
 
 // listening for load event because page should load before any JS is called
 window.addEventListener("load", () => {
-  render(root, store);
+  // render(root, store);
+  getImageOfTheDay(store);
 });
 
 // ------------------------------------------------------  COMPONENTS
@@ -66,7 +91,7 @@ window.addEventListener("load", () => {
 const Greeting = (name) => {
   if (name) {
     return `
-            <h1>Welcome, ${name}!</h1>
+            <h1>${name}!</h1>
         `;
   }
 
@@ -78,12 +103,12 @@ const Greeting = (name) => {
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
   // If image does not already exist, or it is not from today -- request it again
-  const today = new Date();
-  const photodate = new Date(apod.date);
-  console.log(photodate.getDate(), today.getDate());
+  // const today = new Date();
+  // const photodate = new Date(apod.date);
+  // console.log(photodate.getDate(), today.getDate());
 
-  console.log(photodate.getDate() === today.getDate());
-  if (!apod || apod.date === today.getDate()) {
+  // console.log(photodate.getDate() === today.getDate());
+  if (!apod) {
     getImageOfTheDay(store);
   }
 
@@ -95,9 +120,11 @@ const ImageOfTheDay = (apod) => {
             <p>${apod.explanation}</p>
         `;
   } else {
+    console.log(apod);
     return `
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
+            
+            <img src="${apod}" height="350px" width="100%" />
+            
         `;
   }
 };
@@ -105,12 +132,23 @@ const ImageOfTheDay = (apod) => {
 // ------------------------------------------------------  API CALLS
 
 // Example API call
+// const getImageOfTheDay = (state) => {
+//   let { apod } = state;
+
+//   fetch(`http://localhost:3000/apod`)
+//     .then((res) => res.json())
+//     .then((rover) => updateStore(spirit, { rover }));
+
+//   // return data;
+// };
+
 const getImageOfTheDay = (state) => {
   let { apod } = state;
+  console.log(state);
 
-  fetch(`http://localhost:3000/apod`)
+  fetch(`http://localhost:3000/opportunity`)
     .then((res) => res.json())
-    .then((apod) => updateStore(store, { apod }));
+    .then((opportunity) => updateStore(store, { opportunity }));
 
-  return data;
+  // return data;
 };
