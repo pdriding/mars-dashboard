@@ -4,21 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <!-- <link rel="stylesheet" href="../public/assets/stylesheets/index.css" />
-    <link rel="stylesheet" href="../public/assets/stylesheets/resets.css" /> -->
+    <link rel="stylesheet" href="/assets/stylesheets/index.css" />
+    <link rel="stylesheet" href="/assets/stylesheets/resets.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap"
+    />
     <title>Document</title>
   </head>
 
   <body>
     <main>
       <div id="nav-page">
-        <div class="page-container">
-          <h1>Mars Dashboard</h1>
-          <h2>Please choose a NASA Rover</h2>
-          <div class="buttons"></div>
-          <button>CURIOSITY</button>
-          <button>SPIRIT</button>
-          <button>OPPORTUNITY</button>
+        <div class="landing-container">
+          <h1 class="title">Mars Dashboard</h1>
+          <h2 class="sub-title">Please choose a NASA Rover</h2>
+          <div class="button-group">
+            <button class="curiosity-button" data-id="curiosity">
+              CURIOSITY
+            </button>
+            <button class="spirit-button" data-id="spirit">SPIRIT</button>
+            <button class="opportunity-button" data-id="opportunity">
+              OPPORTUNITY
+            </button>
+          </div>
         </div>
       </div>
       <div id="root" class="hidden">

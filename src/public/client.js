@@ -1,20 +1,22 @@
-// let store = {
-//   user: { name: "Peter" },
-//   apod: "",
-//   rover: "",
-//   rovers: ["Curiosity", "Opportunity", "Spirit"],
-// };
+// Query Selctors
 
-// let spirit = {
-//   recentImages: [],
-//   launchDate,
-//   landingDate,
-//   name,
-//   status
-// };
+const curiosityBtn = document.querySelector(".curiosity-button");
+const spiritBtn = document.querySelector(".spirit-button");
+const opportunityBtn = document.querySelector(".opportunity-button");
 
 let store = {};
 
+curiosityBtn.addEventListener("click", function (e) {
+  getImageOfTheDay(store, "curiosity");
+});
+
+spiritBtn.addEventListener("click", function (e) {
+  getImageOfTheDay(store, "spirit");
+});
+
+opportunityBtn.addEventListener("click", function (e) {
+  getImageOfTheDay(store, "opportunity");
+});
 // The launch date, landing date, name and status
 
 // add our markup to the page
@@ -24,7 +26,6 @@ const updateStore = (oldState, updatedState) => {
   const newState = Object.values(updatedState)
     .flat()
     .reduce((acc, cur, i, arr) => {
-      console.log(cur.img_src);
       if (i === 0) {
         acc.name = cur.rover.name;
         acc.landingDate = cur.rover.landing_date;
@@ -82,7 +83,7 @@ const App = (state) => {
 // listening for load event because page should load before any JS is called
 window.addEventListener("load", () => {
   // render(root, store);
-  getImageOfTheDay(store);
+  // getImageOfTheDay(store);
 });
 
 // ------------------------------------------------------  COMPONENTS
@@ -120,7 +121,6 @@ const ImageOfTheDay = (apod) => {
             <p>${apod.explanation}</p>
         `;
   } else {
-    console.log(apod);
     return `
             
             <img src="${apod}" height="350px" width="100%" />
@@ -142,13 +142,13 @@ const ImageOfTheDay = (apod) => {
 //   // return data;
 // };
 
-const getImageOfTheDay = (state) => {
+const getImageOfTheDay = (state, rover) => {
   let { apod } = state;
   console.log(state);
 
-  fetch(`http://localhost:3000/opportunity`)
+  fetch(`http://localhost:3000/${rover}`)
     .then((res) => res.json())
-    .then((opportunity) => updateStore(store, { opportunity }));
+    .then((rover) => updateStore(store, { rover }));
 
   // return data;
 };

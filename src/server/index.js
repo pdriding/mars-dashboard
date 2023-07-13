@@ -40,4 +40,30 @@ app.get("/opportunity", async (req, res) => {
   }
 });
 
+app.get("/curiosity", async (req, res) => {
+  try {
+    let rover = await fetch(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${process.env.API_KEY}`
+    ).then((res) => res.json());
+    const finalRes = Object.values(rover).flat();
+    // res.send({ image });
+    res.send(finalRes);
+  } catch (err) {
+    console.log("error:", err);
+  }
+});
+
+app.get("/spirit", async (req, res) => {
+  try {
+    let rover = await fetch(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/spirit/photos?sol=1000&api_key=${process.env.API_KEY}`
+    ).then((res) => res.json());
+    const finalRes = Object.values(rover).flat();
+    // res.send({ image });
+    res.send(finalRes);
+  } catch (err) {
+    console.log("error:", err);
+  }
+});
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
