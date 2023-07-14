@@ -1,33 +1,46 @@
-// Query Selctors
+"use strict";
 
+// Query Selctors
 const curiosityBtn = document.querySelector(".curiosity-button");
 const spiritBtn = document.querySelector(".spirit-button");
 const opportunityBtn = document.querySelector(".opportunity-button");
+const pageCon = document.querySelector(".page-container");
+const landingCon = document.querySelector(".landing-container");
 
-let store = {};
-
+// Event Listners
 curiosityBtn.addEventListener("click", function (e) {
+  pageCon.innerHTML = "";
+  root.classList.toggle("hidden");
   getImageOfTheDay(store, "curiosity");
 });
 
 spiritBtn.addEventListener("click", function (e) {
+  pageCon.innerHTML = "";
+  root.classList.toggle("hidden");
   getImageOfTheDay(store, "spirit");
 });
 
 opportunityBtn.addEventListener("click", function (e) {
+  pageCon.innerHTML = "";
+  root.classList.toggle("hidden");
   getImageOfTheDay(store, "opportunity");
 });
-// The launch date, landing date, name and status
 
-// add our markup to the page
+// ROOT
 const root = document.getElementById("root");
 
+// STATE
+let store = {};
+
+// FUNCTIONS
 const updateStore = (oldState, updatedState) => {
+  console.log(updatedState);
   const newState = Object.values(updatedState)
     .flat()
     .reduce((acc, cur, i, arr) => {
       if (i === 0) {
         acc.name = cur.rover.name;
+        acc.status = cur.rover.status;
         acc.landingDate = cur.rover.landing_date;
         acc.launchDate = cur.rover.launch_date;
         acc.image = [];
@@ -37,6 +50,7 @@ const updateStore = (oldState, updatedState) => {
     }, {});
 
   Object.assign(oldState, newState);
+  console.log(2);
   render(root, store);
 };
 
@@ -52,28 +66,35 @@ const App = (state) => {
   console.log(state);
 
   return `
-        <header></header>
-        <main>
-            ${Greeting(state.name)}
+        <header>
+        <nav>
+            <ul class="nav-list">          
+            <li><a class="home-button" href="/">Home</a></li>
+            <li><a href="#" onclick="getImageOfTheDay(store, 'curiosity')">Curiosity</a></li>
+            <li><a href="#" onclick="getImageOfTheDay(store, 'spirit')">Spirit</a></li> 
+            <li><a href="#" onclick="getImageOfTheDay(store, 'opportunity')">Opportunity</a></li>        
+            </ul>
+          </nav>
+        </header>
+        <main class="rover-container">
+        <!-- ${Greeting(state.name)} -->
+            
+            <h1 class="rover-name">${state.name}</h1>
             <section>
-                <h3>This NASA rover left earth on ${state.launchDate}</h3>
-                <h3>And landed on mars on ${state.landingDate}</h3>
-                <h3>Put things on the page!</h3>
-                <p>Here is an example section.</p>
-                <p>
-                    One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-                    the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-                    This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-                    applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-                    explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-                    but generally help with discoverability of relevant imagery.
-                </p>
+                <h3 class="launch-date">This NASA rover left earth on ${
+                  state.launchDate
+                } and landed on mars on ${
+    state.landingDate
+  } its status is currently ${state.status}.</h3>
+                
+                <div class="image-container">
                 ${ImageOfTheDay(state.image[0])}
                 ${ImageOfTheDay(state.image[1])}
                 ${ImageOfTheDay(state.image[2])}
                 ${ImageOfTheDay(state.image[3])}
                 ${ImageOfTheDay(state.image[4])}
                 ${ImageOfTheDay(state.image[5])}
+                </div>
             </section>
         </main>
         <footer></footer>
@@ -92,7 +113,7 @@ window.addEventListener("load", () => {
 const Greeting = (name) => {
   if (name) {
     return `
-            <h1>${name}!</h1>
+            <h1 >${name}</h1>
         `;
   }
 
@@ -143,8 +164,7 @@ const ImageOfTheDay = (apod) => {
 // };
 
 const getImageOfTheDay = (state, rover) => {
-  let { apod } = state;
-  console.log(state);
+  // let { apod } = state;
 
   fetch(`http://localhost:3000/${rover}`)
     .then((res) => res.json())
