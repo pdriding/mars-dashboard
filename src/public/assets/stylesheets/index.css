@@ -10,15 +10,6 @@ body {
   background-attachment: fixed;
 }
 
-/* .landing-container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  align-content: space-between;
-} */
-
 /* ------ LANDING PAGE ------- */
 
 .landing-container {
@@ -75,10 +66,9 @@ nav {
 
 .nav-item {
   display: flex;
-  justify-content: center; /* Center the link horizontally within the li */
-  align-items: center; /* Center the link vertically within the li */
-  flex-grow: 1; /* Allow the list items to take equal space */
-  /* padding: 10px; */
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
 }
 
 .nav-list li {
@@ -93,7 +83,7 @@ li a {
   display: block;
   /* padding: 5px 10px; */
   text-decoration: none;
-  color: #ffa500; /* Text color for the navigation links */
+  color: #ffa500;
 }
 
 .home-button {
@@ -101,12 +91,12 @@ li a {
 }
 
 li a:hover {
-  background-color: #ddd; /* Background color when hovering over a navigation link */
+  background-color: #ddd;
 }
 
 li a.active {
-  background-color: #aaa; /* Background color for the active navigation link */
-  color: #fff; /* Text color for the active navigation link */
+  background-color: #aaa;
+  color: #fff;
 }
 
 .rover-container {
@@ -193,12 +183,12 @@ footer {
 
   .image-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
-    grid-gap: 10px; /* Gap between grid items */
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
   }
 
   img {
-    display: block; /* Removes extra spacing below the image */
+    display: block;
     max-width: 100%;
     height: auto;
   }
@@ -234,8 +224,8 @@ footer {
 
   .image-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 2 columns with equal width */
-    grid-gap: 10px; /* Gap between grid items */
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
   }
 
   li a {
