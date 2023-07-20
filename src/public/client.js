@@ -1,5 +1,14 @@
 "use strict";
 
+// Import ImmutableJS
+const { Map, List } = Immutable;
+
+const immutableMap = Map({ key: "value" });
+const immutableList = List([1, 2, 3]);
+
+console.log(immutableMap.get("key"));
+console.log(immutableList.toJS());
+
 // Query Selctors
 const curiosityBtn = document.querySelector(".curiosity-button");
 const spiritBtn = document.querySelector(".spirit-button");
@@ -8,7 +17,13 @@ const pageCon = document.querySelector(".page-container");
 const root = document.getElementById("root");
 
 // STATE
-let store = {};
+let store = Map({
+  name: "",
+  status: "",
+  landingDate: "",
+  launchDate: "",
+  image: List(),
+});
 
 const render = (state) => {
   return App(state);
@@ -20,17 +35,18 @@ const updateStore = (oldState, updatedState) => {
     .flat()
     .reduce((acc, cur, i, arr) => {
       if (i === 0) {
-        acc.name = cur.rover.name;
-        acc.status = cur.rover.status;
-        acc.landingDate = cur.rover.landing_date;
-        acc.launchDate = cur.rover.launch_date;
-        acc.image = [];
+        acc = acc.merge({
+          name: cur.rover.name,
+          status: cur.rover.status,
+          landingDate: cur.rover.landing_date,
+          launchDate: cur.rover.launch_date,
+          image: List(),
+        });
       }
-      acc.image.push(cur.img_src);
-      return acc;
-    }, {});
-
-  return newState;
+      return acc.update("image", (imageList) => imageList.push(cur.img_src));
+    }, Map());
+  console.log(newState.toJS());
+  return newState.toJS();
 };
 
 // Pure function to render the App
