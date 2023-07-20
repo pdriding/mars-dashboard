@@ -1,8 +1,6 @@
 /* -------------------  MOBILE  --------------------- */
 
 body {
-  /* display: flex;
-  flex-direction: column; */
   font-family: "Orbitron", sans-serif;
   max-height: 100vh;
   min-height: 100vh;
@@ -63,7 +61,6 @@ button {
 /* Nav */
 
 nav {
-  /* background-color: #f0f0f0; Background color for the navigation bar */
   max-width: 100%;
 }
 
@@ -76,6 +73,14 @@ nav {
   padding: 0;
 }
 
+.nav-item {
+  display: flex;
+  justify-content: center; /* Center the link horizontally within the li */
+  align-items: center; /* Center the link vertically within the li */
+  flex-grow: 1; /* Allow the list items to take equal space */
+  /* padding: 10px; */
+}
+
 .nav-list li {
   flex-grow: 1;
 }
@@ -86,7 +91,7 @@ li {
 
 li a {
   display: block;
-  padding: 5px 10px;
+  /* padding: 5px 10px; */
   text-decoration: none;
   color: #ffa500; /* Text color for the navigation links */
 }
@@ -131,6 +136,11 @@ li a.active {
   gap: 20px;
 }
 
+.image-container image {
+  height: 350px;
+  width: 100%;
+}
+
 header {
   /* header styles */
 }
@@ -138,6 +148,8 @@ header {
 main {
   flex: 1;
   padding: 10px;
+  display: flex;
+  justify-content: center;
 }
 
 footer {
@@ -146,17 +158,150 @@ footer {
 
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {
-  /* use mobile */
+  .landing-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+    max-width: 80%;
+  }
+
+  .button-group button {
+    padding: 15px 40px;
+  }
+
+  .title {
+    font-size: 38px;
+    color: #fff;
+    margin-bottom: 30px;
+  }
+
+  .sub-title {
+    font-size: 28px;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
+    grid-gap: 10px; /* Gap between grid items */
+  }
+
+  img {
+    display: block; /* Removes extra spacing below the image */
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 /* -------------------  DESKTOP  -------------------- */
 
 @media (min-width: 1224px) {
-  /* use mobile */
+  .button-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 30px;
+    max-width: 80%;
+  }
+
+  .button-group button {
+    padding: 15px 40px;
+    font-size: 20px;
+  }
+
+  .title {
+    font-size: 48px;
+    color: #fff;
+    margin-bottom: 30px;
+  }
+
+  .sub-title {
+    font-size: 38px;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 2 columns with equal width */
+    grid-gap: 10px; /* Gap between grid items */
+  }
+
+  li a {
+    font-size: 30px;
+  }
+
+  .rover-name {
+    font-size: 50px;
+  }
+
+  h3 {
+    font-size: 30px;
+  }
 }
 
 /* -------------------  LARGE SCREENS  -------------- */
 
 @media (min-width: 1824px) {
-  /* use mobile */
+  .button-group button {
+    padding: 35px 60px;
+    font-size: 30px;
+  }
+
+  .title {
+    font-size: 68px;
+    color: #fff;
+    margin-bottom: 30px;
+  }
+
+  .sub-title {
+    font-size: 58px;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+
+  .nav-list {
+    margin-top: 20px;
+  }
+
+  li a {
+    font-size: 40px;
+  }
+
+  .rover-name {
+    font-size: 60px;
+    font-weight: 900;
+  }
+
+  h3 {
+    font-size: 40px;
+  }
+
+  .rover-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    overflow-y: auto;
+  }
+
+  .image-grid {
+    margin-top: 20px;
+  }
+
+  .loading {
+    font-size: 40px;
+  }
 }

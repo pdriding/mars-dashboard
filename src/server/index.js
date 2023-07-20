@@ -12,58 +12,32 @@ app.use(bodyParser.json());
 
 app.use("/", express.static(path.join(__dirname, "../public")));
 
-// your API calls
-
-// example API call
-// app.get("/apod", async (req, res) => {
-//   try {
-//     let image = await fetch(
-//       `https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`
-//     ).then((res) => res.json());
-//     console.log(image);
-//     res.send({ image });
-//   } catch (err) {
-//     console.log("error:", err);
-//   }
-// });
-
-app.get("/opportunity", async (req, res) => {
+// Helper function to fetch rover photos
+const fetchRoverPhotos = async (roverName) => {
   try {
-    let rover = await fetch(
-      `https://api.nasa.gov/mars-photos/api/v1/rovers/opportunity/photos?sol=1000&api_key=${process.env.API_KEY}`
+    const rover = await fetch(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverName}/photos?sol=1000&api_key=${process.env.API_KEY}`
     ).then((res) => res.json());
-    const finalRes = Object.values(rover).flat();
-    // res.send({ image });
-    res.send(finalRes);
+    return Object.values(rover).flat();
   } catch (err) {
     console.log("error:", err);
+    return [];
   }
+};
+
+app.get("/opportunity", async (req, res) => {
+  const photos = await fetchRoverPhotos("opportunity");
+  res.send(photos);
 });
 
 app.get("/curiosity", async (req, res) => {
-  try {
-    let rover = await fetch(
-      `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${process.env.API_KEY}`
-    ).then((res) => res.json());
-    const finalRes = Object.values(rover).flat();
-    // res.send({ image });
-    res.send(finalRes);
-  } catch (err) {
-    console.log("error:", err);
-  }
+  const photos = await fetchRoverPhotos("curiosity");
+  res.send(photos);
 });
 
 app.get("/spirit", async (req, res) => {
-  try {
-    let rover = await fetch(
-      `https://api.nasa.gov/mars-photos/api/v1/rovers/spirit/photos?sol=1000&api_key=${process.env.API_KEY}`
-    ).then((res) => res.json());
-    const finalRes = Object.values(rover).flat();
-    // res.send({ image });
-    res.send(finalRes);
-  } catch (err) {
-    console.log("error:", err);
-  }
+  const photos = await fetchRoverPhotos("spirit");
+  res.send(photos);
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
