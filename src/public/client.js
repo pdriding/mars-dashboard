@@ -23,7 +23,6 @@ const render = (state) => {
   return App(state);
 };
 
-// Pure function to update the store
 const updateStore = (oldState, updatedState) => {
   const newState = Object.values(updatedState)
     .flat()
@@ -49,7 +48,6 @@ const updateStore = (oldState, updatedState) => {
   return newState.toJS();
 };
 
-// Pure function to render the App
 const App = (state) => {
   return `
     <header>
@@ -79,26 +77,36 @@ const App = (state) => {
   `;
 };
 
-// Pure function to render the image container
 const getImages = (images) => {
   return images
     .map((image) => `<div class="image-container"><img src="${image}"/></div>`)
     .join("");
 };
 
-// Higher-Order Function to fetch rover info
 const fetchRoverInfo = (rover) => {
   return fetch(`http://localhost:3000/${rover}`).then((res) => res.json());
 };
 
-// Higher-Order Function to get rover info and update the store
 const getRoverInfo = (state, rover) => {
   return fetchRoverInfo(rover).then((roverData) =>
     updateStore(state, { roverData })
   );
 };
 
-// Higher-Order Function to handle the event for getting rover info and updating the content
+// Higher Order Function
+const addClickListener = (element, callback) => {
+  element.addEventListener("click", () => {
+    pageCon.innerHTML = "";
+    root.classList.toggle("hidden");
+    callback();
+  });
+};
+
+const toggleRootVisibility = () => {
+  const root = document.getElementById("root");
+  root.classList.toggle("hidden");
+};
+
 const eventListenerHandler = (state, rover) => {
   getRoverInfo(state, rover)
     .then((updatedState) => {
@@ -110,9 +118,7 @@ const eventListenerHandler = (state, rover) => {
     });
 };
 
-// Run the following code after the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
-  // Attach event listener to the document using event delegation
   document.addEventListener("click", (event) => {
     const target = event.target;
     if (target.matches(".nav-list a[data-rover]")) {
@@ -120,21 +126,16 @@ document.addEventListener("DOMContentLoaded", () => {
       eventListenerHandler(store, target.dataset.rover);
     }
   });
-  curiosityBtn.addEventListener("click", () => {
-    pageCon.innerHTML = "";
-    root.classList.toggle("hidden");
+
+  addClickListener(curiosityBtn, () => {
     eventListenerHandler(store, "curiosity");
   });
 
-  spiritBtn.addEventListener("click", () => {
-    pageCon.innerHTML = "";
-    root.classList.toggle("hidden");
+  addClickListener(spiritBtn, () => {
     eventListenerHandler(store, "spirit");
   });
 
-  opportunityBtn.addEventListener("click", () => {
-    pageCon.innerHTML = "";
-    root.classList.toggle("hidden");
+  addClickListener(opportunityBtn, () => {
     eventListenerHandler(store, "opportunity");
   });
 });
