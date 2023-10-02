@@ -15,26 +15,26 @@
 
   <body>
     <main>
-      <div class="page-container">
+      <div id="root">
         <div class="landing-container">
-          <h1 class="title">Mars Dashboard</h1>
-          <h2 class="sub-title">Please choose a NASA Rover</h2>
-          <div class="button-group">
-            <button class="curiosity-button" data-id="curiosity">
-              CURIOSITY
-            </button>
-            <button class="spirit-button" data-id="spirit">SPIRIT</button>
-            <button class="opportunity-button" data-id="opportunity">
-              OPPORTUNITY
-            </button>
+          <h1 id="loading" class="hidden">Loading...</h1>
+
+          <h1 class="title">Mars Rover Dashboard</h1>
+          <h2 class="sub-title">Please choose a rover</h2>
+          <div class="rover-buttons">
+            <button id="curiosity-button">Curiosity</button>
+
+            <button id="opportunity-button">Opportunity</button>
+
+            <button id="spirit-button">Spirit</button>
           </div>
         </div>
       </div>
-      <div id="root" class="hidden">
-        <h1 class="loading">Loading...</h1>
-      </div>
     </main>
   </body>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/4.3.1/immutable.js"></script>
-  <script type="module" src="/client.js"></script>
+  <!-- Load Immutable.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/4.0.0/immutable.js"></script>
+
+  <!-- Load your application-specific script -->
+  <script type="module" src="client.js"></script>
 </html>

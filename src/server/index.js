@@ -12,32 +12,39 @@ app.use(bodyParser.json());
 
 app.use("/", express.static(path.join(__dirname, "../public")));
 
-// Helper function to fetch rover photos
-const fetchRoverPhotos = async (roverName) => {
-  try {
-    const rover = await fetch(
-      `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverName}/photos?sol=1000&api_key=${process.env.API_KEY}`
-    ).then((res) => res.json());
-    return Object.values(rover).flat();
-  } catch (err) {
-    console.log("error:", err);
-    return [];
-  }
-};
-
-app.get("/opportunity", async (req, res) => {
-  const photos = await fetchRoverPhotos("opportunity");
-  res.send(photos);
-});
+// API calls
 
 app.get("/curiosity", async (req, res) => {
-  const photos = await fetchRoverPhotos("curiosity");
-  res.send(photos);
+  try {
+    let image = await fetch(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${process.env.API_KEY}`
+    ).then((res) => res.json());
+    res.send({ image });
+  } catch (err) {
+    console.log("error:", err);
+  }
+});
+
+app.get("/opportunity", async (req, res) => {
+  try {
+    let image = await fetch(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/opportunity/photos?sol=1000&api_key=${process.env.API_KEY}`
+    ).then((res) => res.json());
+    res.send({ image });
+  } catch (err) {
+    console.log("error:", err);
+  }
 });
 
 app.get("/spirit", async (req, res) => {
-  const photos = await fetchRoverPhotos("spirit");
-  res.send(photos);
+  try {
+    let image = await fetch(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/spirit/photos?sol=1000&api_key=${process.env.API_KEY}`
+    ).then((res) => res.json());
+    res.send({ image });
+  } catch (err) {
+    console.log("error:", err);
+  }
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

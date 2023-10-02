@@ -1,141 +1,146 @@
 "use strict";
 
-// Import ImmutableJS
 const { Map, List } = Immutable;
 
-// Query Selctors
-const curiosityBtn = document.querySelector(".curiosity-button");
-const spiritBtn = document.querySelector(".spirit-button");
-const opportunityBtn = document.querySelector(".opportunity-button");
-const pageCon = document.querySelector(".page-container");
 const root = document.getElementById("root");
+const curiosityBtn = document.getElementById("curiosity-button");
+const spiritBtn = document.getElementById("spirit-button");
+const opportunityBtn = document.getElementById("opportunity-button");
 
-// STATE
-let store = Map({
-  name: "",
+// Initial state
+const initialState = Map({
+  rover: "",
   status: "",
   landingDate: "",
   launchDate: "",
-  image: List(),
+  images: List([]),
 });
 
-const render = (state) => {
-  return App(state);
+// Pure function to update the state
+const updateState = (oldState, newState) => {
+  return oldState.merge(newState);
 };
 
-const updateStore = (oldState, updatedState) => {
-  const newState = Object.values(updatedState)
-    .flat()
-    .reduce((acc, cur, i, arr) => {
-      if (i === 0) {
-        acc = acc.merge({
-          name: cur.rover.name,
-          status: cur.rover.status,
-          landingDate: cur.rover.landing_date,
-          launchDate: cur.rover.launch_date,
-          image: List(),
-        });
-      }
-
-      if (i < 6) {
-        // Only add the latest 6 images to the list
-        return acc.update("image", (imageList) => imageList.push(cur.img_src));
-      }
-
-      return acc;
-    }, Map());
-
-  return newState.toJS();
+// Pure function to create a new state
+const createNewState = (rover, data) => {
+  return Map({
+    rover: rover,
+    status: data.image.photos[0].rover.status,
+    landingDate: data.image.photos[0].rover.landing_date,
+    launchDate: data.image.photos[0].rover.launch_date,
+    images: List(data.image.photos.slice(0, 6)),
+  });
 };
 
+// Pure function to generate the UI markup
+const renderUI = (root, state) => {
+  root.innerHTML = App(state);
+};
+
+// Pure function to create the UI markup
 const App = (state) => {
+  if (!state) {
+    return `
+    <h1 id="loading">Loading...</h1>
+    `;
+  }
+
+  const { rover, images, status, landingDate, launchDate } = state.toJS();
   return `
-    <header>
+      <header>
       <nav>
-        <ul class="nav-list">          
+        <ul class="nav-list">
           <li><a class="home-button nav-item" href="/">Home</a></li>
-          <li><a class="nav-item" href="#" class="curiosity-button" data-rover="curiosity">Curiosity</a></li>
-          <li><a class="nav-item" href="#" class="spirit-button" data-rover="spirit">Spirit</a></li>
-          <li><a class="nav-item" href="#" class="opportunity-button" data-rover="opportunity">Opportunity</a></li>  
+          <li><a class="nav-item curiosity-button" href="#" data-rover="curiosity">Curiosity</a></li>
+          <li><a class="nav-item opportunity-button" href="#" data-rover="opportunity">Opportunity</a></li>
+          <li><a class="nav-item spirit-button" href="#" data-rover="spirit">Spirit</a></li>
+          
         </ul>
       </nav>
     </header>
     <main class="rover-container">
-      <h1 class="rover-name">${state.name}</h1>
+      <h1 class="rover-name">${capitalizeFirstLetter(rover)}</h1>
       <section>
-        <h3 class="launch-date">This NASA rover left earth on ${
-          state.launchDate
-        } and landed on mars on ${state.landingDate} its status is currently ${
-    state.status
-  }.</h3>
-        <div class="image-grid">
-          ${getImages(state.image)}
+        <h3 class="launch-date">This NASA rover left Earth on ${launchDate} and landed on Mars on ${landingDate}. Its status is currently ${status}.</h3>
+        <div class="image-grid image-container">
+          ${createImageGrid(images)}
         </div>
       </section>
     </main>
     <footer></footer>
+
   `;
 };
 
-const getImages = (images) => {
-  return images
-    .map((image) => `<div class="image-container"><img src="${image}"/></div>`)
+const capitalizeFirstLetter = function (str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+// Pure function to create the image grid markup
+const createImageGrid = (images) => {
+  const imageGrid = images
+    .map(
+      (image) =>
+        `<img class="grid-item" src="${image.img_src}" alt="Nasa Rover Image">`
+    )
     .join("");
+
+  return imageGrid;
 };
 
-const fetchRoverInfo = (rover) => {
-  return fetch(`http://localhost:3000/${rover}`).then((res) => res.json());
+// Pure function to handle user actions (returns a new state)
+const updateStateOnRoverClick = async (rover, currentState) => {
+  try {
+    const data = await fetchData(rover);
+    const state = createNewState(rover, data);
+
+    // Update the state
+    return updateState(currentState, state);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return currentState;
+  }
 };
 
-const getRoverInfo = (state, rover) => {
-  return fetchRoverInfo(rover).then((roverData) =>
-    updateStore(state, { roverData })
-  );
+// Pure function to fetch data (replace this with your actual API call)
+const fetchData = async (rover) => {
+  // Replace this with your actual API URL
+  const apiUrl = `http://localhost:3000/${rover}`;
+  const data = await fetch(apiUrl).then((res) => res.json());
+
+  return data;
 };
 
-// Higher Order Function
-const addClickListener = (element, callback) => {
-  element.addEventListener("click", () => {
-    pageCon.innerHTML = "";
-    root.classList.toggle("hidden");
-    callback();
-  });
-};
-
-const toggleRootVisibility = () => {
-  const root = document.getElementById("root");
-  root.classList.toggle("hidden");
-};
-
-const eventListenerHandler = (state, rover) => {
-  getRoverInfo(state, rover)
-    .then((updatedState) => {
-      const html = render(updatedState);
-      root.innerHTML = html;
-    })
-    .catch((err) => {
-      console.log("Error:", err);
-    });
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-  document.addEventListener("click", (event) => {
+// Event listeners (using the pure functions)
+window.addEventListener("load", () => {
+  document.addEventListener("click", async (event) => {
     const target = event.target;
     if (target.matches(".nav-list a[data-rover]")) {
       event.preventDefault();
-      eventListenerHandler(store, target.dataset.rover);
+      renderUI(root);
+      const newState = await updateStateOnRoverClick(
+        target.dataset.rover,
+        initialState
+      );
+      renderUI(root, newState);
     }
   });
 
-  addClickListener(curiosityBtn, () => {
-    eventListenerHandler(store, "curiosity");
+  curiosityBtn.addEventListener("click", async () => {
+    renderUI(root);
+    const newState = await updateStateOnRoverClick("curiosity", initialState);
+    renderUI(root, newState);
   });
 
-  addClickListener(spiritBtn, () => {
-    eventListenerHandler(store, "spirit");
+  opportunityBtn.addEventListener("click", async () => {
+    renderUI(root);
+    const newState = await updateStateOnRoverClick("opportunity", initialState);
+    renderUI(root, newState);
   });
 
-  addClickListener(opportunityBtn, () => {
-    eventListenerHandler(store, "opportunity");
+  spiritBtn.addEventListener("click", async () => {
+    renderUI(root);
+    const newState = await updateStateOnRoverClick("spirit", initialState);
+    renderUI(root, newState);
   });
 });
